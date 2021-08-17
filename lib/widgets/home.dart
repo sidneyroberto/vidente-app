@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:vidente_app/models/cidade.dart';
 import 'package:vidente_app/models/previsao_hora.dart';
+import 'package:vidente_app/services/cidade_service.dart';
 import 'package:vidente_app/services/previsao_service.dart';
+import 'package:vidente_app/widgets/configuracoes.dart';
 import 'package:vidente_app/widgets/proximas_temperaturas.dart';
 import 'package:vidente_app/widgets/resumo.dart';
 
@@ -11,16 +14,23 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Future<List<PrevisaoHora>> ultimasPrevisoes;
+  List<Cidade> cidades;
 
   @override
   void initState() {
     super.initState();
     carregarPrevisoes();
+    carregarCidades();
   }
 
   void carregarPrevisoes() {
     PrevisaoService service = PrevisaoService();
     ultimasPrevisoes = service.recuperarUltimasPrevisoes();
+  }
+
+  void carregarCidades() async {
+    CidadeService service = CidadeService();
+    cidades = await service.recuperarCidades();
   }
 
   Future<Null> atualizarPrevisoes() async {
@@ -31,9 +41,19 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Vidente'),
-        centerTitle: true,
-      ),
+          title: Text('Vidente'),
+          centerTitle: true,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => Configuracoes(
+                        cidades: this.cidades,
+                      )));
+            },
+            child: Icon(
+              Icons.settings, // add custom icons also
+            ),
+          )),
       body: RefreshIndicator(
         onRefresh: atualizarPrevisoes,
         child: Center(
@@ -71,7 +91,7 @@ class _HomeState extends State<Home> {
                     Padding(padding: EdgeInsets.all(10)),
                     ProximasTemperaturas(
                       previsoes: previsoes.sublist(1, previsoes.length),
-                    )
+                    ),
                   ],
                 );
               } else if (snapshot.hasError) {
