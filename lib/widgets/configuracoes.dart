@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vidente_app/models/cidade.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:vidente_app/services/cidade_service.dart';
 
 class Configuracoes extends StatelessWidget {
   final List<Cidade> cidades;
@@ -28,7 +29,12 @@ class Configuracoes extends StatelessWidget {
             ),
           ),
           suggestionsCallback: filtrarCidades,
-          onSuggestionSelected: (sugestao) => print(sugestao.nome),
+          onSuggestionSelected: (sugestao) async {
+            CidadeService service = CidadeService();
+            final String filtro = sugestao.nome + ' ' + sugestao.estado;
+            await service.pesquisarCidade(filtro);
+            Navigator.pop(context);
+          },
           itemBuilder: (context, sugestao) {
             return ListTile(
               leading: Icon(Icons.place),

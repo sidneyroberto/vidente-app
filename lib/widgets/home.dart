@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:vidente_app/controllers/cidade_controller.dart';
 import 'package:vidente_app/models/cidade.dart';
 import 'package:vidente_app/models/previsao_hora.dart';
 import 'package:vidente_app/services/cidade_service.dart';
@@ -37,6 +40,10 @@ class _HomeState extends State<Home> {
     setState(() => carregarPrevisoes());
   }
 
+  FutureOr<dynamic> carregarPrevisoesDaNovaCidade(dynamic valor) async {
+    setState(() => carregarPrevisoes());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,10 +52,12 @@ class _HomeState extends State<Home> {
           centerTitle: true,
           leading: GestureDetector(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => Configuracoes(
-                        cidades: this.cidades,
-                      )));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: (context) => Configuracoes(
+                            cidades: this.cidades,
+                          )))
+                  .then(carregarPrevisoesDaNovaCidade);
             },
             child: Icon(
               Icons.settings, // add custom icons also
@@ -81,7 +90,7 @@ class _HomeState extends State<Home> {
                 return Column(
                   children: [
                     Resumo(
-                      cidade: 'Aquidauana-MS',
+                      cidade: CidadeController.instancia.cidadeEscolhida.nome,
                       temperaturaAtual: temperaturaAtual,
                       temperaturaMaxima: maiorTemperatura,
                       temperaturaMinima: menorTemperatura,
