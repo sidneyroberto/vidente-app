@@ -6,8 +6,7 @@ class CidadeController extends ChangeNotifier {
   static CidadeController instancia = CidadeController();
 
   CidadeController() {
-    this.cidadeEscolhida =
-        new Cidade.comCodigo('38802', 'Aquidauana', 'Mato Grosso do Sul', 'MS');
+    this.cidadeEscolhida = null;
   }
 
   trocarCidade(Cidade cidade) {

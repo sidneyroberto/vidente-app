@@ -17,13 +17,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Future<List<PrevisaoHora>> ultimasPrevisoes;
-  List<Cidade> cidades;
+  Future<List<Cidade>> cidades;
 
   @override
   void initState() {
     super.initState();
     carregarPrevisoes();
-    carregarCidades();
   }
 
   void carregarPrevisoes() {
@@ -31,16 +30,7 @@ class _HomeState extends State<Home> {
     ultimasPrevisoes = service.recuperarUltimasPrevisoes();
   }
 
-  void carregarCidades() async {
-    CidadeService service = CidadeService();
-    cidades = await service.recuperarCidades();
-  }
-
   Future<Null> atualizarPrevisoes() async {
-    setState(() => carregarPrevisoes());
-  }
-
-  FutureOr<dynamic> carregarPrevisoesDaNovaCidade(dynamic valor) async {
     setState(() => carregarPrevisoes());
   }
 
@@ -52,12 +42,9 @@ class _HomeState extends State<Home> {
           centerTitle: true,
           leading: GestureDetector(
             onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(
-                      builder: (context) => Configuracoes(
-                            cidades: this.cidades,
-                          )))
-                  .then(carregarPrevisoesDaNovaCidade);
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => Configuracoes()),
+              );
             },
             child: Icon(
               Icons.settings, // add custom icons also
