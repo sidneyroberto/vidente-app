@@ -14,4 +14,19 @@ class Cidade {
         objJson['AdministrativeArea']['LocalizedName'],
         objJson['AdministrativeArea']['ID']);
   }
+
+  @override
+  String toString() {
+    return 'Cidade{id: 1, codigo: $codigo, nome: $nome, estado: $estado, siglaEstado: $siglaEstado}';
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': 1,
+      'codigo': codigo,
+      'nome': nome,
+      'estado': estado,
+      'siglaEstado': siglaEstado
+    };
+  }
 }
